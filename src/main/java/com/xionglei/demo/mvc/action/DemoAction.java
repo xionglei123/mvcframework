@@ -23,6 +23,7 @@ public class DemoAction {
 
         String result = demoService.get(name);
         try {
+            response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write(result);
         } catch (IOException e) {
             e.printStackTrace();
@@ -33,6 +34,7 @@ public class DemoAction {
     public void add(HttpServletRequest request, HttpServletResponse response,
                     @GPRequestParam("a") Integer a,@GPRequestParam("b") Integer b){
         try {
+            response.setContentType("text/html;charset=UTF-8");
             response.getWriter().write(a+"+"+b +"="+(a+b) );
         } catch (IOException e) {
             e.printStackTrace();

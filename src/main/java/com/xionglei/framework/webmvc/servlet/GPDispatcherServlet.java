@@ -18,8 +18,6 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static jdk.nashorn.api.scripting.ScriptUtils.convert;
-
 public class GPDispatcherServlet extends HttpServlet {
 
     private Properties contextConfig = new Properties();
@@ -77,7 +75,7 @@ public class GPDispatcherServlet extends HttpServlet {
             //如果找到匹配的对象，则开始填充参数值
             if(!handler.paramIndexMapping.containsKey(param.getKey())) {continue;}
             int index = handler.paramIndexMapping.get(param.getKey());
-            paramValues [index] = convert(parameterTypes[index],value) ;
+            paramValues [index] = castStringValue(value,parameterTypes[index]) ;
         }
 
         //设置方法中的request和response对象
@@ -283,10 +281,23 @@ public class GPDispatcherServlet extends HttpServlet {
         return null;
     }
 
-        /**
-         * Handler记录Controller中的RequestMapping和Method的对应关系
-         * <p>
-         */
+    private Object castStringValue(String value,Class<?> clazz){
+
+        if(clazz == String.class){
+            return value;
+        }else if(clazz == Integer.class){
+            return Integer.valueOf(value);
+        }else if(clazz == int.class){
+            return Integer.valueOf(value).intValue();
+        }else{
+            return null;
+        }
+
+    }
+
+    /**
+     * Handler记录Controller中的RequestMapping和Method的对应关系
+     */
     private class Handler {
 
         protected Object controller;//保存方法对应的实例
